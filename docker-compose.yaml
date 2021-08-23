@@ -31,6 +31,16 @@ services:
         volumes:
             - artifacts:/mlruns
 
+    zimp-clf:
+        restart: always
+        image: freecraver/zimp-clf-service
+        container_name: zimp_clf_service
+        expose:
+            - "5000"
+        networks:
+            - frontend
+            - backend
+       
     nginx:
         restart: always
         build: ./nginx
@@ -42,6 +52,8 @@ services:
             - frontend
         depends_on:
             - web
+            - zimp-clf
+            
 
 networks:
     frontend:
