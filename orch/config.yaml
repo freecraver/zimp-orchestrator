@@ -1,0 +1,2 @@
+model_type: SVM
+classification_service_url: http://localhost/
