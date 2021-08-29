@@ -4,6 +4,10 @@ import yaml
 class Config:
     model_type: str
     classification_service_url: str
+    mlflow_url: str
+    experiment_name: str
+    run_name: str
+    random_seed: str
 
     def __init__(self, **entries):
         self.__dict__.update(entries)
