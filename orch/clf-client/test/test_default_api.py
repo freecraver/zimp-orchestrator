@@ -36,6 +36,13 @@ class TestDefaultApi(unittest.TestCase):
         """
         pass
 
+    def test_clf_m_predict_proba_post(self):
+        """Test case for clf_m_predict_proba_post
+
+        Predict probabilities for top n class labels for all supplied texts. Requires a previous train-call  # noqa: E501
+        """
+        pass
+
     def test_clf_predict_post(self):
         """Test case for clf_predict_post
 

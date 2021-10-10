@@ -5,6 +5,7 @@ All URIs are relative to *https://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**clf_download_get**](DefaultApi.md#clf_download_get) | **GET** /clf/download | Retrieves an implementation-specific model dump (e.g. joblib for sklearn)
+[**clf_m_predict_proba_post**](DefaultApi.md#clf_m_predict_proba_post) | **POST** /clf/m/predict_proba | Predict probabilities for top n class labels for all supplied texts. Requires a previous train-call
 [**clf_predict_post**](DefaultApi.md#clf_predict_post) | **POST** /clf/predict | Predict the class label of one input text. Requires a previous train-call
 [**clf_predict_proba_post**](DefaultApi.md#clf_predict_proba_post) | **POST** /clf/predict_proba | Predict probabilities for top n class labels. Requires a previous train-call
 [**clf_train_post**](DefaultApi.md#clf_train_post) | **POST** /clf/train | Trains a model using a csv file with &#39;,&#39; delimiters and the column headers &#39;text&#39;, &#39;target&#39;
@@ -42,6 +43,54 @@ This endpoint does not need any parameter.
 ### Return type
 
 void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **clf_m_predict_proba_post**
+> object clf_m_predict_proba_post(body=body)
+
+Predict probabilities for top n class labels for all supplied texts. Requires a previous train-call
+
+
+
+### Example
+```python
+from __future__ import print_function
+import time
+import zimp_clf_client
+from zimp_clf_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = zimp_clf_client.DefaultApi()
+body = zimp_clf_client.Body() # Body |  (optional)
+
+try:
+    # Predict probabilities for top n class labels for all supplied texts. Requires a previous train-call
+    api_response = api_instance.clf_m_predict_proba_post(body=body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->clf_m_predict_proba_post: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**Body**](.md)|  | [optional] 
+
+### Return type
+
+**object**
 
 ### Authorization
 
@@ -170,7 +219,7 @@ api_instance = zimp_clf_client.DefaultApi()
 file = '/path/to/file.txt' # file | The file to upload. (optional)
 model_type = 'model_type_example' # str | Type of model to be trained (optional)
 seed = 56 # int | random seed required for reproducibility (optional)
-asynchronous = true # bool | do not wait for training to complete (optional)
+asynchronous = True # bool | do not wait for training to complete (optional)
 
 try:
     # Trains a model using a csv file with ',' delimiters and the column headers 'text', 'target'
