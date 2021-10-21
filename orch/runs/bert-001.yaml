@@ -1,0 +1,7 @@
+model_type: BERT
+classification_service_url: http://localhost/
+mlflow_url: http://localhost/
+experiment_name: Verification
+run_name: BERT-001
+random_seed: 2139287
+dataset: TREC-6

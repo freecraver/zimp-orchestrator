@@ -8,6 +8,7 @@ class Config:
     experiment_name: str
     run_name: str
     random_seed: str
+    dataset: str
 
     def __init__(self, **entries):
         self.__dict__.update(entries)
