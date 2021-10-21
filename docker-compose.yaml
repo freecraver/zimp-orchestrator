@@ -29,7 +29,9 @@ services:
             - backend
         command: mlflow server --backend-store-uri mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE} --default-artifact-root /mlruns --host 0.0.0.0
         volumes:
-            - artifacts:/mlruns
+            - type: bind
+              source: ${MLRUNS_HOSTPATH}
+              target: /mlruns
 
     zimp-clf:
         restart: always
@@ -63,4 +65,3 @@ networks:
 
 volumes:
     dbdata:
-    artifacts:
