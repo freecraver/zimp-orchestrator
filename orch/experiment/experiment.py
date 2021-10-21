@@ -1,7 +1,9 @@
-import time
 import zimp_clf_client
 import mlflow
 import pandas as pd
+import os
+import time
+import logging
 
 from experiment.config import Config
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, precision_score, recall_score
@@ -24,38 +26,60 @@ class Experiment:
         # init classification API
         configuration = zimp_clf_client.Configuration()
         configuration.host = config.classification_service_url
-        self.clf_api = zimp_clf_client.DefaultApi(zimp_clf_client.ApiClient(configuration=configuration))
+        api_client = zimp_clf_client.ApiClient(configuration=configuration)
+        api_client.rest_client.pool_manager.connection_pool_kw['retries'] = 10  # in case api is unstable
+        self.clf_api = zimp_clf_client.DefaultApi(api_client)
 
         # init mlflow API
         mlflow.set_tracking_uri(config.mlflow_url)
         self.mlflow_experiment = get_or_create_mlflow_experiment(config.experiment_name)
 
-    def run(self, train_path: str, test_path: str):
+        # resource paths
+        self.train_path = os.path.join('resources', config.dataset, 'train.csv')
+        self.test_path = os.path.join('resources', config.dataset, 'test.csv')
+
+    def run(self):
         with mlflow.start_run(experiment_id=self.mlflow_experiment.experiment_id,
                               run_name=self.config.run_name) as mlflow_run:
             mlflow.log_param('model_type', self.config.model_type)
             mlflow.log_param('zimp_mechanism', 'None')
             mlflow.log_param('random_seed', self.config.random_seed)
+            mlflow.log_param('dataset', self.config.dataset)
 
             # TRAIN
             ref_time = time.time()
-            self.clf_api.clf_train_post(file=train_path, model_type=self.config.model_type,
-                                        seed=self.config.random_seed, asynchronous='false')
+            self.clf_api.clf_train_post(file=self.train_path, model_type=self.config.model_type,
+                                        seed=self.config.random_seed, asynchronous='true')
+            self.wait_for_completion()  # poll api until training is completed
             mlflow.log_metric('train_time_sec', time.time() - ref_time)
 
             # EVAL TRAIN
             ref_time = time.time()
-            df_pred_train = self.get_predictions_for_file(train_path)
+            df_pred_train = self.get_predictions_for_file(self.train_path)
             mlflow.log_metric('train_predict_time_sec', time.time() - ref_time)
             self.report_metrics(df_pred_train, metric_prefix='train_')
 
             # EVAL TEST
             ref_time = time.time()
-            df_pred_test = self.get_predictions_for_file(test_path)
+            df_pred_test = self.get_predictions_for_file(self.test_path)
             mlflow.log_metric('test_predict_time_sec', time.time() - ref_time)
             self.report_metrics(df_pred_test, metric_prefix='test_')
 
-        print(self.clf_api.clf_training_status_get())
+            self.store_model()
+
+        logging.debug(self.clf_api.clf_training_status_get())
+
+    def store_model(self):
+        """
+        retrieves trained model from clf-api and stores it in mlflow
+        :return:
+        """
+        model_path = 'resources/model'
+        binary_file = self.clf_api.clf_download_get(_preload_content=False).data
+        with open(model_path, 'wb') as f:
+            f.write(binary_file)
+
+        mlflow.log_artifact(model_path)
 
     def get_predictions_for_file(self, file_path):
         """
@@ -75,6 +99,16 @@ class Experiment:
             df_pred.loc[idx:idx+BATCH_SIZE-1, 'certainty'] = [res['labels'][0]['probability'] for res in clf_response]
 
         return df_pred
+
+    def wait_for_completion(self):
+        wait_time = 1
+        while True:
+            train_state = self.clf_api.clf_training_status_get()
+            if train_state['isTrained']:
+                break
+            logging.info(f'Training not completed. Waiting for {int(wait_time)} seconds..')
+            time.sleep(int(wait_time))
+            wait_time += 0.1
 
     def report_metrics(self, df_pred, metric_prefix=""):
         """
