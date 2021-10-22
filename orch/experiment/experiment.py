@@ -5,6 +5,8 @@ import os
 import time
 import logging
 
+from zimp_clf_client.rest import ApiException
+
 from experiment.config import Config
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, precision_score, recall_score
 
@@ -92,13 +94,33 @@ class Experiment:
         df_pred['prediction'] = ''
         df_pred['certainty'] = 0
         for idx in range(0, df_pred.shape[0], BATCH_SIZE):
-            clf_response = self.clf_api.clf_m_predict_proba_post(
-                body={'n': 1, 'texts': df_pred.loc[idx:idx+BATCH_SIZE-1, 'text'].tolist()})
-
+            clf_response = self.get_api_prediction({'n': 1, 'texts': df_pred.loc[idx:idx+BATCH_SIZE-1, 'text'].tolist()})
             df_pred.loc[idx:idx+BATCH_SIZE-1, 'prediction'] = [res['labels'][0]['label'] for res in clf_response]
             df_pred.loc[idx:idx+BATCH_SIZE-1, 'certainty'] = [res['labels'][0]['probability'] for res in clf_response]
 
         return df_pred
+
+    def get_api_prediction(self, request_body):
+        """
+        wrapper for predict_proba API call which adds a retry in case of gateway errors (may happen with slow bert model)
+        :param request_body:
+        :return:
+        """
+        attempt_count = 0
+
+        while attempt_count < 10:
+            if attempt_count > 0:
+                logging.info("Retry API CALL")
+
+            try:
+                clf_response = self.clf_api.clf_m_predict_proba_post(body=request_body)
+            except ApiException as e:
+                logging.warning("Predict Call failed", e)
+                attempt_count += 1
+            else:
+                return clf_response
+
+        raise ApiException(0, 'API-Call fails consistently. Pleas check logs')
 
     def wait_for_completion(self):
         wait_time = 1
