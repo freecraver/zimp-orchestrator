@@ -89,14 +89,14 @@ class Experiment:
         :param file_path: path to the file which should be predicted (columns text must be present, target can be present)
         :return: pandas df which contains loaded data plus prediction and certainty cols
         """
-        BATCH_SIZE = 128
+        batch_size = 32 if self.config.model_type == 'BERT' else 128  # OOM-exception for BERT
         df_pred = pd.read_csv(file_path)
         df_pred['prediction'] = ''
         df_pred['certainty'] = 0
-        for idx in range(0, df_pred.shape[0], BATCH_SIZE):
-            clf_response = self.get_api_prediction({'n': 1, 'texts': df_pred.loc[idx:idx+BATCH_SIZE-1, 'text'].tolist()})
-            df_pred.loc[idx:idx+BATCH_SIZE-1, 'prediction'] = [res['labels'][0]['label'] for res in clf_response]
-            df_pred.loc[idx:idx+BATCH_SIZE-1, 'certainty'] = [res['labels'][0]['probability'] for res in clf_response]
+        for idx in range(0, df_pred.shape[0], batch_size):
+            clf_response = self.get_api_prediction({'n': 1, 'texts': df_pred.loc[idx:idx+batch_size-1, 'text'].tolist()})
+            df_pred.loc[idx:idx+batch_size-1, 'prediction'] = [res['labels'][0]['label'] for res in clf_response]
+            df_pred.loc[idx:idx+batch_size-1, 'certainty'] = [res['labels'][0]['probability'] for res in clf_response]
 
         return df_pred
 
@@ -127,6 +127,7 @@ class Experiment:
         while True:
             train_state = self.clf_api.clf_training_status_get()
             if train_state['isTrained']:
+                logging.info('Training completed.')
                 break
             logging.info(f'Training not completed. Waiting for {int(wait_time)} seconds..')
             time.sleep(int(wait_time))
