@@ -1,0 +1,7 @@
+classification_service_url: http://localhost/
+dataset: TREC-6
+experiment_name: Baseline
+mlflow_url: http://localhost/
+model_type: SVM
+random_seed: 270817
+run_name: SVM-114

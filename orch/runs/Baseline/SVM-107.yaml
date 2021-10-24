@@ -1,0 +1,7 @@
+classification_service_url: http://localhost/
+dataset: DBP-14
+experiment_name: Baseline
+mlflow_url: http://localhost/
+model_type: SVM
+random_seed: 47120
+run_name: SVM-107

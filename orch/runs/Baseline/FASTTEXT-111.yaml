@@ -1,0 +1,7 @@
+classification_service_url: http://localhost/
+dataset: TREC-6
+experiment_name: Baseline
+mlflow_url: http://localhost/
+model_type: FASTTEXT
+random_seed: 45710
+run_name: FASTTEXT-111
