@@ -18,3 +18,7 @@ class Config:
         with open(file_path) as f:
             data_map = yaml.safe_load(f)
         return Config(**data_map)
+
+    def to_yaml(self, file_path):
+        with open(file_path, "w") as f:
+            yaml.dump(self.__dict__, f)
