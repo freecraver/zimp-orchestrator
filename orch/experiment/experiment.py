@@ -71,6 +71,17 @@ class Experiment:
 
         logging.debug(self.clf_api.clf_training_status_get())
 
+    def exists_in_mlflow(self) -> bool:
+        """
+
+        :return: True if a successful experiment exists in mlflow which has the same run name
+        """
+        run_cnt = mlflow.search_runs(
+            experiment_ids=[self.mlflow_experiment.experiment_id],
+            filter_string=f'tags."mlflow.runName"="{self.config.run_name}" attributes.status="FINISHED"').shape[0]
+
+        return run_cnt > 0
+
     def store_model(self):
         """
         retrieves trained model from clf-api and stores it in mlflow
@@ -93,6 +104,7 @@ class Experiment:
         df_pred = pd.read_csv(file_path)
         df_pred['prediction'] = ''
         df_pred['certainty'] = 0
+        df_pred['target'] = df_pred['target'].astype(str)
         for idx in range(0, df_pred.shape[0], batch_size):
             clf_response = self.get_api_prediction({'n': 1, 'texts': df_pred.loc[idx:idx+batch_size-1, 'text'].tolist()})
             df_pred.loc[idx:idx+batch_size-1, 'prediction'] = [res['labels'][0]['label'] for res in clf_response]

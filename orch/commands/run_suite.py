@@ -23,6 +23,10 @@ class RunSuite(Command):
         config_files = glob.glob(config_folder + '*.yaml')
         logging.info(f'Found {len(config_files)} experiments')
 
-        for idx, experiment_config in enumerate(config_files):
+        for idx, experiment_config in enumerate(config_files[::-1]):
             logging.info(f'Starting with experiment {idx} - {experiment_config}')
-            Experiment(Config.from_yaml(experiment_config)).run()
+            experiment = Experiment(Config.from_yaml(experiment_config))
+            if experiment.exists_in_mlflow():
+                logging.info('Skipping already performed experiment')
+                continue
+            experiment.run()
