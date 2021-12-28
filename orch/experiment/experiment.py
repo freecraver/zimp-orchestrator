@@ -30,7 +30,9 @@ class Experiment:
         configuration.host = config.classification_service_url
         api_client = zimp_clf_client.ApiClient(configuration=configuration)
         api_client.rest_client.pool_manager.connection_pool_kw['retries'] = 10  # in case api is unstable
-        self.clf_api = zimp_clf_client.DefaultApi(api_client)
+        self.train_api = zimp_clf_client.TrainingApi(api_client)
+        self.predict_api = zimp_clf_client.PredictionApi(api_client)
+        self.download_api = zimp_clf_client.DownloadApi(api_client)
 
         # init mlflow API
         mlflow.set_tracking_uri(config.mlflow_url)
@@ -50,7 +52,7 @@ class Experiment:
 
             # TRAIN
             ref_time = time.time()
-            self.clf_api.clf_train_post(file=self.train_path, model_type=self.config.model_type,
+            self.train_api.clf_train_post(file=self.train_path, model_type=self.config.model_type,
                                         seed=self.config.random_seed, asynchronous='true')
             self.wait_for_completion()  # poll api until training is completed
             mlflow.log_metric('train_time_sec', time.time() - ref_time)
@@ -69,7 +71,7 @@ class Experiment:
 
             self.store_model()
 
-        logging.debug(self.clf_api.clf_training_status_get())
+        logging.debug(self.train_api.clf_training_status_get())
 
     def exists_in_mlflow(self) -> bool:
         """
@@ -88,7 +90,7 @@ class Experiment:
         :return:
         """
         model_path = 'resources/model'
-        binary_file = self.clf_api.clf_download_get(_preload_content=False).data
+        binary_file = self.download_api.clf_download_get(_preload_content=False).data
         with open(model_path, 'wb') as f:
             f.write(binary_file)
 
@@ -100,7 +102,7 @@ class Experiment:
         :param file_path: path to the file which should be predicted (columns text must be present, target can be present)
         :return: pandas df which contains loaded data plus prediction and certainty cols
         """
-        batch_size = 32 if self.config.model_type == 'BERT' else 128  # OOM-exception for BERT
+        batch_size = 6 if self.config.model_type == 'BERT' else 128  # OOM-exception for BERT
         df_pred = pd.read_csv(file_path)
         df_pred['prediction'] = ''
         df_pred['certainty'] = 0
@@ -125,7 +127,7 @@ class Experiment:
                 logging.info("Retry API CALL")
 
             try:
-                clf_response = self.clf_api.clf_m_predict_proba_post(body=request_body)
+                clf_response = self.predict_api.clf_m_predict_proba_post(body=request_body)
             except ApiException as e:
                 logging.warning("Predict Call failed", e)
                 attempt_count += 1
@@ -134,11 +136,18 @@ class Experiment:
 
         raise ApiException(0, 'API-Call fails consistently. Pleas check logs')
 
+    def safe_get_status(self):
+        try:
+            train_state = self.train_api.clf_training_status_get()
+            return train_state['isTrained']
+        except ApiException as e:
+            logging.warning("Status Call failed", e)
+            return False
+
     def wait_for_completion(self):
         wait_time = 1
         while True:
-            train_state = self.clf_api.clf_training_status_get()
-            if train_state['isTrained']:
+            if self.safe_get_status() :
                 logging.info('Training completed.')
                 break
             logging.info(f'Training not completed. Waiting for {int(wait_time)} seconds..')

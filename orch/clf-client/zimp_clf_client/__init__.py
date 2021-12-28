@@ -16,7 +16,9 @@
 from __future__ import absolute_import
 
 # import apis into sdk package
-from zimp_clf_client.api.default_api import DefaultApi
+from zimp_clf_client.api.download_api import DownloadApi
+from zimp_clf_client.api.prediction_api import PredictionApi
+from zimp_clf_client.api.training_api import TrainingApi
 
 # import ApiClient
 from zimp_clf_client.api_client import ApiClient

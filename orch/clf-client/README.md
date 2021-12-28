@@ -23,7 +23,7 @@ pip install git+https://github.com//.git
 
 Then import the package:
 ```python
-import zimp_clf_client
+import zimp_clf_client 
 ```
 
 ### Setuptools
@@ -52,13 +52,13 @@ from zimp_clf_client.rest import ApiException
 from pprint import pprint
 
 # create an instance of the API class
-api_instance = zimp_clf_client.DefaultApi(zimp_clf_client.ApiClient(configuration))
+api_instance = zimp_clf_client.DownloadApi(zimp_clf_client.ApiClient(configuration))
 
 try:
     # Retrieves an implementation-specific model dump (e.g. joblib for sklearn)
     api_instance.clf_download_get()
 except ApiException as e:
-    print("Exception when calling DefaultApi->clf_download_get: %s\n" % e)
+    print("Exception when calling DownloadApi->clf_download_get: %s\n" % e)
 
 ```
 
@@ -68,11 +68,14 @@ All URIs are relative to *https://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*DefaultApi* | [**clf_download_get**](docs/DefaultApi.md#clf_download_get) | **GET** /clf/download | Retrieves an implementation-specific model dump (e.g. joblib for sklearn)
-*DefaultApi* | [**clf_predict_post**](docs/DefaultApi.md#clf_predict_post) | **POST** /clf/predict | Predict the class label of one input text. Requires a previous train-call
-*DefaultApi* | [**clf_predict_proba_post**](docs/DefaultApi.md#clf_predict_proba_post) | **POST** /clf/predict_proba | Predict probabilities for top n class labels. Requires a previous train-call
-*DefaultApi* | [**clf_train_post**](docs/DefaultApi.md#clf_train_post) | **POST** /clf/train | Trains a model using a csv file with &#39;,&#39; delimiters and the column headers &#39;text&#39;, &#39;target&#39;
-*DefaultApi* | [**clf_training_status_get**](docs/DefaultApi.md#clf_training_status_get) | **GET** /clf/training/status | Checks if a trained model is available (and fully trained)
+*DownloadApi* | [**clf_download_get**](docs/DownloadApi.md#clf_download_get) | **GET** /clf/download | Retrieves an implementation-specific model dump (e.g. joblib for sklearn)
+*DownloadApi* | [**clf_file_predictions_id_get**](docs/DownloadApi.md#clf_file_predictions_id_get) | **GET** /clf/file/predictions/{id} | Retrieve async predictions for given result id
+*PredictionApi* | [**clf_file_predict_proba_post**](docs/PredictionApi.md#clf_file_predict_proba_post) | **POST** /clf/file/predict_proba | Creates predictions for texts in supplied csv file with &#39;,&#39; delimiters and the column header &#39;text&#39;
+*PredictionApi* | [**clf_m_predict_proba_post**](docs/PredictionApi.md#clf_m_predict_proba_post) | **POST** /clf/m/predict_proba | Predict probabilities for top n class labels for all supplied texts. Requires a previous train-call
+*PredictionApi* | [**clf_predict_post**](docs/PredictionApi.md#clf_predict_post) | **POST** /clf/predict | Predict the class label of one input text. Requires a previous train-call
+*PredictionApi* | [**clf_predict_proba_post**](docs/PredictionApi.md#clf_predict_proba_post) | **POST** /clf/predict_proba | Predict probabilities for top n class labels. Requires a previous train-call
+*TrainingApi* | [**clf_train_post**](docs/TrainingApi.md#clf_train_post) | **POST** /clf/train | Trains a model using a csv file with &#39;,&#39; delimiters and the column headers &#39;text&#39;, &#39;target&#39;
+*TrainingApi* | [**clf_training_status_get**](docs/TrainingApi.md#clf_training_status_get) | **GET** /clf/training/status | Checks if a trained model is available (and fully trained)
 
 
 ## Documentation For Models

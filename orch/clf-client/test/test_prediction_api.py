@@ -16,23 +16,23 @@ from __future__ import absolute_import
 import unittest
 
 import zimp_clf_client
-from zimp_clf_client.api.default_api import DefaultApi  # noqa: E501
+from zimp_clf_client.api.prediction_api import PredictionApi  # noqa: E501
 from zimp_clf_client.rest import ApiException
 
 
-class TestDefaultApi(unittest.TestCase):
-    """DefaultApi unit test stubs"""
+class TestPredictionApi(unittest.TestCase):
+    """PredictionApi unit test stubs"""
 
     def setUp(self):
-        self.api = zimp_clf_client.api.default_api.DefaultApi()  # noqa: E501
+        self.api = zimp_clf_client.api.prediction_api.PredictionApi()  # noqa: E501
 
     def tearDown(self):
         pass
 
-    def test_clf_download_get(self):
-        """Test case for clf_download_get
+    def test_clf_file_predict_proba_post(self):
+        """Test case for clf_file_predict_proba_post
 
-        Retrieves an implementation-specific model dump (e.g. joblib for sklearn)  # noqa: E501
+        Creates predictions for texts in supplied csv file with ',' delimiters and the column header 'text'  # noqa: E501
         """
         pass
 
@@ -54,20 +54,6 @@ class TestDefaultApi(unittest.TestCase):
         """Test case for clf_predict_proba_post
 
         Predict probabilities for top n class labels. Requires a previous train-call  # noqa: E501
-        """
-        pass
-
-    def test_clf_train_post(self):
-        """Test case for clf_train_post
-
-        Trains a model using a csv file with ',' delimiters and the column headers 'text', 'target'  # noqa: E501
-        """
-        pass
-
-    def test_clf_training_status_get(self):
-        """Test case for clf_training_status_get
-
-        Checks if a trained model is available (and fully trained)  # noqa: E501
         """
         pass
 
