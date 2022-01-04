@@ -54,20 +54,18 @@ class Experiment:
             ref_time = time.time()
             self.train_api.clf_train_post(file=self.train_path, model_type=self.config.model_type,
                                         seed=self.config.random_seed, asynchronous='true')
-            self.wait_for_completion()  # poll api until training is completed
+            self.wait_for_train_completion()  # poll api until training is completed
             mlflow.log_metric('train_time_sec', time.time() - ref_time)
 
             # EVAL TRAIN
             ref_time = time.time()
-            df_pred_train = self.get_predictions_for_file(self.train_path)
+            self.predict_file_async(self.train_path, metric_prefix='train_')
             mlflow.log_metric('train_predict_time_sec', time.time() - ref_time)
-            self.report_metrics(df_pred_train, metric_prefix='train_')
 
             # EVAL TEST
             ref_time = time.time()
-            df_pred_test = self.get_predictions_for_file(self.test_path)
+            self.predict_file_async(self.test_path, metric_prefix='test_')
             mlflow.log_metric('test_predict_time_sec', time.time() - ref_time)
-            self.report_metrics(df_pred_test, metric_prefix='test_')
 
             self.store_model()
 
@@ -96,10 +94,22 @@ class Experiment:
 
         mlflow.log_artifact(model_path)
 
+    def predict_file_async(self, file_path, metric_prefix=""):
+        """
+        sends complete file for prediction and polls for completion
+        :param file_path: path to the file which should be predicted ('text', 'target')
+        :return:
+        """
+        tmp_file = 'prediction_input.csv'
+        df_pred = pd.read_csv(file_path)
+        df_pred['text'].to_csv(tmp_file, index=False)
+        result_id = self.predict_api.clf_file_predict_proba_post(file=tmp_file)['resultId']
+        self.wait_for_predict_completion(file_path, result_id, metric_prefix)
+
     def get_predictions_for_file(self, file_path):
         """
         retrieves predictions and related certainty for all texts in the supplied file
-        :param file_path: path to the file which should be predicted (columns text must be present, target can be present)
+        :param file_path: path to the file which should be predicted ('text', 'target')
         :return: pandas df which contains loaded data plus prediction and certainty cols
         """
         batch_size = 6 if self.config.model_type == 'BERT' else 128  # OOM-exception for BERT
@@ -144,7 +154,7 @@ class Experiment:
             logging.warning("Status Call failed", e)
             return False
 
-    def wait_for_completion(self):
+    def wait_for_train_completion(self):
         wait_time = 1
         while True:
             if self.safe_get_status() :
@@ -153,6 +163,43 @@ class Experiment:
             logging.info(f'Training not completed. Waiting for {int(wait_time)} seconds..')
             time.sleep(int(wait_time))
             wait_time += 0.1
+
+    def safe_get_predictions(self, result_id, prediction_path):
+        try:
+            csv_file = self.download_api.clf_file_predictions_id_get(id=result_id, _preload_content=False).data
+            with open(prediction_path, 'wb') as f:
+                f.write(csv_file)
+        except ApiException as e:
+            logging.warning("Prediction Poll Call failed", e)
+
+        if not os.path.exists(prediction_path):
+            return pd.DataFrame()
+
+        return pd.read_csv(prediction_path)
+
+    def wait_for_predict_completion(self, input_path, result_id, metric_prefix=""):
+        wait_time = 10
+        prediction_path = f'predictions_{result_id}.csv'
+        df_input = pd.read_csv(input_path)
+        cnt_records = df_input.shape[0]
+
+        while True:
+            df_pred = self.safe_get_predictions(result_id, prediction_path)
+            cnt_pred = df_pred.shape[0]
+            if cnt_pred < 1:
+                continue
+
+            df_pred['target'] = df_input.loc[:cnt_pred, ['target']].astype(str)
+            self.report_metrics(df_pred, metric_prefix=metric_prefix)
+
+            if cnt_pred == cnt_records:
+                logging.info('Prediction complete')
+                mlflow.log_artifact(prediction_path)
+                break
+
+            logging.info(f'Prediction not completed. Waiting for {int(wait_time)} seconds..')
+            time.sleep(int(wait_time))
+            wait_time += 1
 
     def report_metrics(self, df_pred, metric_prefix=""):
         """
@@ -174,5 +221,6 @@ class Experiment:
             'certainty'].mean()
         metrics[metric_prefix + 'certainty_neg'] = df_pred[df_pred['target'] != df_pred['prediction']][
             'certainty'].mean()
+        metrics[metric_prefix + 'count_observations'] = df_pred.shape[0]
 
         mlflow.log_metrics(metrics)
