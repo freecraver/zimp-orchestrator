@@ -190,11 +190,13 @@ class Experiment:
                 continue
 
             df_pred['target'] = df_input.loc[:cnt_pred, ['target']].astype(str)
+            df_pred['prediction'] = df_pred['prediction'].astype(str)
             self.report_metrics(df_pred, metric_prefix=metric_prefix)
 
             if cnt_pred == cnt_records:
                 logging.info('Prediction complete')
                 mlflow.log_artifact(prediction_path)
+                os.remove(prediction_path)
                 break
 
             logging.info(f'Prediction not completed. Waiting for {int(wait_time)} seconds..')

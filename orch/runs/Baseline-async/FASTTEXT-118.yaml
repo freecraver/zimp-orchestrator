@@ -1,0 +1,7 @@
+classification_service_url: http://localhost/
+dataset: YELP-5
+experiment_name: Baseline-async
+mlflow_url: http://localhost/
+model_type: FASTTEXT
+random_seed: 139949
+run_name: FASTTEXT-118

@@ -1,7 +1,0 @@
-classification_service_url: http://localhost/
-dataset: YELP-5
-experiment_name: Baseline
-mlflow_url: http://localhost/
-model_type: BERT
-random_seed: 13146
-run_name: BERT-103

@@ -1,0 +1,7 @@
+classification_service_url: http://localhost/
+dataset: TREC-6
+experiment_name: Baseline-async
+mlflow_url: http://localhost/
+model_type: BERT
+random_seed: 16940
+run_name: BERT-123
