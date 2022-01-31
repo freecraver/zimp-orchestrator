@@ -7,6 +7,13 @@ from experiment.config import Config
 from experiment.experiment import Experiment
 
 
+def safe_run_experiment(experiment):
+    try:
+        experiment.run()
+    except Exception as e:
+        logging.info('Failed to run experiment', e)
+
+
 class RunSuite(Command):
     """
     runs a whole experiment suite
@@ -29,4 +36,4 @@ class RunSuite(Command):
             if experiment.exists_in_mlflow():
                 logging.info('Skipping already performed experiment')
                 continue
-            experiment.run()
+            safe_run_experiment(experiment)

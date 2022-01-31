@@ -2,7 +2,7 @@ import os
 
 from experiment.config import Config
 
-experiment_name = 'Baseline'
+experiment_name = 'Baseline-async'
 
 run_directory = 'runs/' + experiment_name + '/'
 
@@ -21,6 +21,11 @@ if __name__ == '__main__':
     for seed in random_seeds:
         for dataset in en_datasets:
             for model in model_types:
+
+                if model == 'SVM' and run_idx > 103:
+                    # svm is deterministic
+                    continue
+
                 cfg = Config()
                 cfg.model_type = model
                 cfg.classification_service_url = "http://localhost/"
@@ -29,6 +34,7 @@ if __name__ == '__main__':
                 cfg.run_name = model + '-' + str(run_idx)
                 cfg.random_seed = seed
                 cfg.dataset = dataset
+
                 cfg.to_yaml(run_directory + cfg.run_name + '.yaml')
 
             run_idx += 1
