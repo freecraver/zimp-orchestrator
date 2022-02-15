@@ -10,6 +10,8 @@ from zimp_clf_client.rest import ApiException
 from experiment.config import Config
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, precision_score, recall_score
 
+from experiment.simplify import build_simplifier_from_cfg
+
 
 def get_or_create_mlflow_experiment(experiment_name):
     existing_exp = mlflow.get_experiment_by_name(experiment_name)
@@ -42,13 +44,19 @@ class Experiment:
         self.train_path = os.path.join('resources', config.dataset, 'train.csv')
         self.test_path = os.path.join('resources', config.dataset, 'test.csv')
 
+        # init simplification
+        self.simplifier = build_simplifier_from_cfg(self.config)
+
     def run(self):
         with mlflow.start_run(experiment_id=self.mlflow_experiment.experiment_id,
                               run_name=self.config.run_name) as mlflow_run:
-            mlflow.log_param('model_type', self.config.model_type)
-            mlflow.log_param('zimp_mechanism', 'None')
-            mlflow.log_param('random_seed', self.config.random_seed)
-            mlflow.log_param('dataset', self.config.dataset)
+            self.log_params()
+
+            # SIMPLIFY
+            if self.simplifier:
+                ref_time = time.time()
+                self.simplify_datasets()
+                mlflow.log_metric('zimp_time_sec', time.time() - ref_time)
 
             # TRAIN
             ref_time = time.time()
@@ -66,7 +74,8 @@ class Experiment:
             self.predict_file_async(self.test_path, metric_prefix='test_')
             mlflow.log_metric('test_predict_time_sec', time.time() - ref_time)
 
-            self.store_model()
+            if self.config.store_artifacts:
+                self.store_model()
 
         logging.debug(self.train_api.clf_training_status_get())
 
@@ -144,6 +153,31 @@ class Experiment:
                 return clf_response
 
         raise ApiException(0, 'API-Call fails consistently. Pleas check logs')
+
+    def simplify_datasets(self):
+        df_train = pd.read_csv(self.train_path)
+
+        if not self.simplifier.can_init_statistics() and hasattr(self.simplifier, '_dataset'):
+            # initialize statistics with training set data
+            self.simplifier.load_parameters(dataset=df_train.text)
+
+        # simplify training set
+        df_train.text = self.simplifier.simplify_dataset(df_train.text)
+        self.train_path = 'simplified_train.csv'
+        df_train.to_csv(self.train_path, index=False)
+
+        # simplify test set
+        df_test = pd.read_csv(self.test_path)
+        df_test.text = self.simplifier.simplify_dataset(df_test.text)
+        self.test_path = 'simplified_test.csv'
+        df_test.to_csv(self.test_path, index=False)
+
+    def log_params(self):
+        mlflow.log_param('model_type', self.config.model_type)
+        mlflow.log_param('zimp_mechanism', self.config.zimp_mechanism)
+        mlflow.log_param('random_seed', self.config.random_seed)
+        mlflow.log_param('dataset', self.config.dataset)
+        mlflow.log_params(self.config.zimp_config or {})
 
     def safe_get_status(self):
         try:

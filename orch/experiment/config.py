@@ -9,6 +9,9 @@ class Config:
     run_name: str
     random_seed: str
     dataset: str
+    zimp_mechanism: str
+    zimp_config: dict
+    store_artifacts: bool
 
     def __init__(self, **entries):
         self.__dict__.update(entries)

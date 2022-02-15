@@ -23,6 +23,7 @@ def build_config(model, seed, dataset, idx):
     cfg.run_name = model + '-' + str(idx)
     cfg.random_seed = seed
     cfg.dataset = dataset
+    cfg.store_artifacts = True
 
     cfg.to_yaml(run_directory + cfg.run_name + '.yaml')
 
