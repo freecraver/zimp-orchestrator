@@ -1,7 +1,7 @@
 classification_service_url: http://localhost/
-dataset: YELP-5
-experiment_name: Baseline
+dataset: GERMEVAL-2020
+experiment_name: Baseline-async
 mlflow_url: http://localhost/
 model_type: SVM
-random_seed: 16940
-run_name: SVM-124
+random_seed: 0
+run_name: SVM-203

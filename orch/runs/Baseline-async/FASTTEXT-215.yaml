@@ -1,7 +1,7 @@
 classification_service_url: http://localhost/
-dataset: TREC-6
+dataset: GERMEVAL-2020
 experiment_name: Baseline-async
 mlflow_url: http://localhost/
-model_type: SVM
-random_seed: 0
-run_name: SVM-102
+model_type: FASTTEXT
+random_seed: 270817
+run_name: FASTTEXT-215

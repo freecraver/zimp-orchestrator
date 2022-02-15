@@ -3,5 +3,5 @@ dataset: YELP-5
 experiment_name: Baseline-async
 mlflow_url: http://localhost/
 model_type: SVM
-random_seed: 13146
+random_seed: 0
 run_name: SVM-103

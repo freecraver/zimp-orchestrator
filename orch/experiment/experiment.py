@@ -52,8 +52,7 @@ class Experiment:
 
             # TRAIN
             ref_time = time.time()
-            self.train_api.clf_train_post(file=self.train_path, model_type=self.config.model_type,
-                                        seed=self.config.random_seed, asynchronous='true')
+            self.safe_train(ignore_errors=False)
             self.wait_for_train_completion()  # poll api until training is completed
             mlflow.log_metric('train_time_sec', time.time() - ref_time)
 
@@ -153,6 +152,18 @@ class Experiment:
         except ApiException as e:
             logging.warning("Status Call failed", e)
             return False
+
+    def safe_train(self, ignore_errors=False):
+        try:
+            self.train_api.clf_train_post(file=self.train_path, model_type=self.config.model_type,
+                                          seed=self.config.random_seed, asynchronous='true')
+        except ApiException as e:
+            logging.warning("Training might have failed - check backend server", e)
+            if not ignore_errors:
+                raise e
+            else:
+                # wait for train process to start
+                time.sleep(180)
 
     def wait_for_train_completion(self):
         wait_time = 1
