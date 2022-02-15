@@ -5,3 +5,4 @@ mlflow_url: http://localhost/
 model_type: FASTTEXT
 random_seed: 16940
 run_name: FASTTEXT-122
+store_artifacts: true

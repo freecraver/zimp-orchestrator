@@ -1,0 +1,8 @@
+classification_service_url: http://localhost/
+dataset: 10K-GNAD
+experiment_name: Baseline-async
+mlflow_url: http://localhost/
+model_type: GERMAN_BERT
+random_seed: 28328
+run_name: GERMAN_BERT-225
+store_artifacts: true

@@ -5,3 +5,4 @@ mlflow_url: http://localhost/
 model_type: BERT
 random_seed: 28328
 run_name: BERT-126
+store_artifacts: true
