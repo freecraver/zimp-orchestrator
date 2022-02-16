@@ -159,18 +159,18 @@ class Experiment:
 
         if not self.simplifier.can_init_statistics() and hasattr(self.simplifier, '_dataset'):
             # initialize statistics with training set data
-            self.simplifier.load_parameters(dataset=df_train.text)
+            self.simplifier.load_parameters(dataset=df_train['text'].to_list())
 
         # simplify training set
         df_train.text = self.simplifier.simplify_dataset(df_train.text)
         self.train_path = 'simplified_train.csv'
-        df_train.to_csv(self.train_path, index=False)
+        df_train.replace([' ', ''], '-').to_csv(self.train_path, index=False)
 
         # simplify test set
         df_test = pd.read_csv(self.test_path)
         df_test.text = self.simplifier.simplify_dataset(df_test.text)
         self.test_path = 'simplified_test.csv'
-        df_test.to_csv(self.test_path, index=False)
+        df_test.replace([' ', ''], '-').to_csv(self.test_path, index=False)
 
     def log_params(self):
         mlflow.log_param('model_type', self.config.model_type)
@@ -240,7 +240,8 @@ class Experiment:
 
             if cnt_pred == cnt_records:
                 logging.info('Prediction complete')
-                mlflow.log_artifact(prediction_path)
+                if self.config.store_artifacts:
+                    mlflow.log_artifact(prediction_path)
                 os.remove(prediction_path)
                 break
 
