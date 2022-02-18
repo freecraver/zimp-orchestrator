@@ -1,0 +1,8 @@
+classification_service_url: http://localhost/
+dataset: TREC-6
+experiment_name: Baseline-async
+mlflow_url: http://localhost/
+model_type: RANDOM_FOREST
+random_seed: 47120
+run_name: RANDOM_FOREST-108
+store_artifacts: true

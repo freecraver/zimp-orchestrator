@@ -7,7 +7,7 @@ experiment_name = 'Baseline-async'
 run_directory = 'runs/' + experiment_name + '/'
 
 random_seeds = [13146, 36755, 47120, 45710, 270817, 139949, 214282, 16940, 28328, 214463]
-model_types = ['BERT', 'GERMAN_BERT', 'FASTTEXT']
+model_types = ['BERT', 'GERMAN_BERT', 'FASTTEXT', 'DECISION_TREE', 'RANDOM_FOREST']
 deterministic_model_types = ['SVM']
 
 en_datasets = ['DBP-14', 'TREC-6', 'YELP-5']

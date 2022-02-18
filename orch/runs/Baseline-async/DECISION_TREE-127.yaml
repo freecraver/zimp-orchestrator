@@ -1,0 +1,8 @@
+classification_service_url: http://localhost/
+dataset: YELP-5
+experiment_name: Baseline-async
+mlflow_url: http://localhost/
+model_type: DECISION_TREE
+random_seed: 28328
+run_name: DECISION_TREE-127
+store_artifacts: true

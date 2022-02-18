@@ -1,0 +1,8 @@
+classification_service_url: http://localhost/
+dataset: GERMEVAL-2020
+experiment_name: Baseline-async
+mlflow_url: http://localhost/
+model_type: RANDOM_FOREST
+random_seed: 45710
+run_name: RANDOM_FOREST-212
+store_artifacts: true

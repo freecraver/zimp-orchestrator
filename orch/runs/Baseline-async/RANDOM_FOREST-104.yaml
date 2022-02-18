@@ -1,0 +1,8 @@
+classification_service_url: http://localhost/
+dataset: DBP-14
+experiment_name: Baseline-async
+mlflow_url: http://localhost/
+model_type: RANDOM_FOREST
+random_seed: 36755
+run_name: RANDOM_FOREST-104
+store_artifacts: true
