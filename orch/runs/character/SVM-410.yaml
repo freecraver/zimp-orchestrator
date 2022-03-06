@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: 10K-GNAD
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: SVM
+random_seed: 0
+run_name: SVM-410
+store_artifacts: false
+zimp_config:
+  min_term_frequency: 0.01
+zimp_mechanism: SYMBOL_VOCAB_NOCASING

@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: TREC-6
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: RANDOM_FOREST
+random_seed: 47120
+run_name: RANDOM_FOREST-381
+store_artifacts: false
+zimp_config:
+  min_document_frequency: 0.01
+zimp_mechanism: SYMBOL_VOCAB_NOCASING

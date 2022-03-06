@@ -1,0 +1,10 @@
+classification_service_url: http://localhost/
+dataset: YELP-5
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: FASTTEXT
+random_seed: 36755
+run_name: FASTTEXT-356
+store_artifacts: false
+zimp_config: {}
+zimp_mechanism: SYMBOL_SIMPLE

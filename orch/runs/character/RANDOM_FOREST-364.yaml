@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: YELP-5
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: RANDOM_FOREST
+random_seed: 36755
+run_name: RANDOM_FOREST-364
+store_artifacts: false
+zimp_config:
+  min_term_frequency: 0.001
+zimp_mechanism: SYMBOL_VOCAB_NOCASING

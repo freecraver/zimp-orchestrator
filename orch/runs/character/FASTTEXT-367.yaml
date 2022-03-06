@@ -1,0 +1,10 @@
+classification_service_url: http://localhost/
+dataset: DBP-14
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: FASTTEXT
+random_seed: 47120
+run_name: FASTTEXT-367
+store_artifacts: false
+zimp_config: {}
+zimp_mechanism: SYMBOL_SIMPLE

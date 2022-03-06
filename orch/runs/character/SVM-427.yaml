@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: GERMEVAL-2020
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: SVM
+random_seed: 0
+run_name: SVM-427
+store_artifacts: false
+zimp_config:
+  min_document_frequency: 0.1
+zimp_mechanism: SYMBOL_VOCAB_NOCASING

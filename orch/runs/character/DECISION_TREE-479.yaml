@@ -1,0 +1,10 @@
+classification_service_url: http://localhost/
+dataset: GERMEVAL-2018
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: DECISION_TREE
+random_seed: 47120
+run_name: DECISION_TREE-479
+store_artifacts: false
+zimp_config: {}
+zimp_mechanism: SYMBOL_SIMPLE_ALPHA_NOCASING

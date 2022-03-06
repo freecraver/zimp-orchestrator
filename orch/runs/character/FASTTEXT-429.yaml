@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: GERMEVAL-2020
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: FASTTEXT
+random_seed: 13146
+run_name: FASTTEXT-429
+store_artifacts: false
+zimp_config:
+  min_document_frequency: 0.01
+zimp_mechanism: SYMBOL_VOCAB

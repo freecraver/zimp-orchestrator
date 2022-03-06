@@ -1,0 +1,10 @@
+classification_service_url: http://localhost/
+dataset: 10K-GNAD
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: FASTTEXT
+random_seed: 13146
+run_name: FASTTEXT-402
+store_artifacts: false
+zimp_config: {}
+zimp_mechanism: SYMBOL_SIMPLE_ALPHA_NOCASING

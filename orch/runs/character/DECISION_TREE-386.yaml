@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: TREC-6
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: DECISION_TREE
+random_seed: 47120
+run_name: DECISION_TREE-386
+store_artifacts: false
+zimp_config:
+  min_term_frequency: 0.001
+zimp_mechanism: SYMBOL_VOCAB_NOCASING

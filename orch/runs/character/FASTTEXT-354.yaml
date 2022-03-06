@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: TREC-6
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: FASTTEXT
+random_seed: 36755
+run_name: FASTTEXT-354
+store_artifacts: false
+zimp_config:
+  min_term_frequency: 0.01
+zimp_mechanism: SYMBOL_VOCAB_NOCASING

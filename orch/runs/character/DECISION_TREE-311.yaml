@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: DBP-14
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: DECISION_TREE
+random_seed: 13146
+run_name: DECISION_TREE-311
+store_artifacts: false
+zimp_config:
+  min_term_frequency: 0.05
+zimp_mechanism: SYMBOL_VOCAB_NOCASING

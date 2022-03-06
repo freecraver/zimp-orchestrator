@@ -1,0 +1,10 @@
+classification_service_url: http://localhost/
+dataset: YELP-5
+experiment_name: character
+mlflow_url: http://localhost/
+model_type: SVM
+random_seed: 0
+run_name: SVM-323
+store_artifacts: false
+zimp_config: {}
+zimp_mechanism: SYMBOL_SIMPLE
