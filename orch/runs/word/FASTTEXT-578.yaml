@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: TREC-6
+experiment_name: word
+mlflow_url: http://localhost/
+model_type: FASTTEXT
+random_seed: 47120
+run_name: FASTTEXT-578
+store_artifacts: false
+zimp_config:
+  lowercase: true
+zimp_mechanism: WORD_SIMPLE

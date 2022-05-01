@@ -1,0 +1,12 @@
+classification_service_url: http://localhost/
+dataset: 10K-GNAD
+experiment_name: word
+mlflow_url: http://localhost/
+model_type: FASTTEXT
+random_seed: 36755
+run_name: FASTTEXT-644
+store_artifacts: false
+zimp_config:
+  max_document_frequency: 0.1
+  min_term_frequency: 0.0001
+zimp_mechanism: WORD_VOCAB

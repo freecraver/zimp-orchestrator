@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: 10K-GNAD
+experiment_name: word
+mlflow_url: http://localhost/
+model_type: RANDOM_FOREST
+random_seed: 36755
+run_name: RANDOM_FOREST-640
+store_artifacts: false
+zimp_config:
+  min_term_frequency: 0.001
+zimp_mechanism: WORD_VOCAB

@@ -1,0 +1,13 @@
+classification_service_url: http://localhost/
+dataset: GERMEVAL-2018
+experiment_name: word
+mlflow_url: http://localhost/
+model_type: FASTTEXT
+random_seed: 13146
+run_name: FASTTEXT-615
+store_artifacts: false
+zimp_config:
+  lowercase: true
+  max_length: 6
+  min_length: 3
+zimp_mechanism: WORD_SIMPLE

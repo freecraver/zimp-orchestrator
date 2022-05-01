@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: GERMEVAL-2020
+experiment_name: word
+mlflow_url: http://localhost/
+model_type: DECISION_TREE
+random_seed: 36755
+run_name: DECISION_TREE-656
+store_artifacts: false
+zimp_config:
+  lowercase: true
+zimp_mechanism: WORD_SIMPLE

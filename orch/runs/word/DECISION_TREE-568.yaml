@@ -1,0 +1,12 @@
+classification_service_url: http://localhost/
+dataset: DBP-14
+experiment_name: word
+mlflow_url: http://localhost/
+model_type: DECISION_TREE
+random_seed: 47120
+run_name: DECISION_TREE-568
+store_artifacts: false
+zimp_config:
+  lowercase: true
+  min_length: 2
+zimp_mechanism: WORD_SIMPLE

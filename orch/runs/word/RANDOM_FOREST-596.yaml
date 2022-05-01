@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: YELP-5
+experiment_name: word
+mlflow_url: http://localhost/
+model_type: RANDOM_FOREST
+random_seed: 47120
+run_name: RANDOM_FOREST-596
+store_artifacts: false
+zimp_config:
+  min_term_frequency: 0.01
+zimp_mechanism: WORD_VOCAB

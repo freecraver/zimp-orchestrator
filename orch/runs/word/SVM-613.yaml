@@ -1,0 +1,12 @@
+classification_service_url: http://localhost/
+dataset: GERMEVAL-2018
+experiment_name: word
+mlflow_url: http://localhost/
+model_type: SVM
+random_seed: 0
+run_name: SVM-613
+store_artifacts: false
+zimp_config:
+  lowercase: true
+  min_length: 2
+zimp_mechanism: WORD_SIMPLE

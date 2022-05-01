@@ -1,0 +1,11 @@
+classification_service_url: http://localhost/
+dataset: DBP-14
+experiment_name: word
+mlflow_url: http://localhost/
+model_type: RANDOM_FOREST
+random_seed: 47120
+run_name: RANDOM_FOREST-571
+store_artifacts: false
+zimp_config:
+  min_term_frequency: 1.0e-05
+zimp_mechanism: WORD_VOCAB

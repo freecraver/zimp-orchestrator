@@ -1,0 +1,13 @@
+classification_service_url: http://localhost/
+dataset: 10K-GNAD
+experiment_name: word
+mlflow_url: http://localhost/
+model_type: SVM
+random_seed: 0
+run_name: SVM-604
+store_artifacts: false
+zimp_config:
+  lowercase: true
+  max_length: 6
+  min_length: 3
+zimp_mechanism: WORD_SIMPLE
